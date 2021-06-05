@@ -3,6 +3,9 @@ const connectDB = require("./config/db");
 
 const app = express();
 
+//Init MiddleWare
+app.use(express.json({ extended: false }));
+
 //connect Database
 connectDB();
 
