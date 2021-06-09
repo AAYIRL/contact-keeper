@@ -15,7 +15,7 @@ const Login = (props) => {
       props.history.push("/");
     }
 
-    if (error === "Invalid Email" || error === "Invalid Password") {
+    if (error === "Invalid Email" || error === "Invalid Password ") {
       setAlert(error, "danger");
       clearError();
     }
