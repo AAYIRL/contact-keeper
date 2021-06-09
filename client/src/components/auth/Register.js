@@ -1,10 +1,21 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import AlertContext from "../../context/alert/alertContext";
+import AuthContext from "../../context/auth/authContext";
 
 const Register = () => {
   const alertContext = useContext(AlertContext);
   const { setAlert } = alertContext;
+
+  const authContext = useContext(AuthContext);
+  const { register, error, clearError } = authContext;
+
+  useEffect(() => {
+    if (error === "Email already exists") {
+      setAlert(error, "danger");
+      clearError();
+    }
+  }, [error]);
 
   const [user, setUser] = useState({
     name: "",
@@ -23,9 +34,15 @@ const Register = () => {
     e.preventDefault();
 
     if (name === "" || email === "" || password === "") {
-      setAlert("Please Fill in the Required Fields", "danger");
+      setAlert("Please fill in the required fields", "danger");
     } else if (password !== password2) {
       setAlert("Passwords don't match..Check Again", "danger");
+    } else {
+      register({
+        name,
+        email,
+        password,
+      });
     }
   };
 
@@ -43,7 +60,6 @@ const Register = () => {
             value={name}
             placeholder='Enter your name'
             onChange={onChange}
-            required
           />
         </div>
         <div className='form-group'>
@@ -54,7 +70,6 @@ const Register = () => {
             value={email}
             placeholder='Enter your email'
             onChange={onChange}
-            required
           />
         </div>
         <div className='form-group'>
@@ -65,7 +80,6 @@ const Register = () => {
             value={password}
             placeholder='Enter your password'
             onChange={onChange}
-            required
             minLength='6'
           />
         </div>
@@ -77,7 +91,6 @@ const Register = () => {
             value={password2}
             placeholder='Confirm Password'
             onChange={onChange}
-            required
             minLength='6'
           />
         </div>
