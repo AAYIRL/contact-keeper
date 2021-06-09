@@ -6,6 +6,7 @@ import {
   UPDATE_CONTACTS,
   FILTER_CONTACTS,
   CLEAR_FILTER,
+  CONTACT_ERROR,
 } from "../types";
 
 const final = (state, action) => {
@@ -60,6 +61,12 @@ const final = (state, action) => {
       return {
         ...state,
         filtered: null,
+      };
+
+    case CONTACT_ERROR:
+      return {
+        ...state,
+        error: action.payload,
       };
 
     default:

@@ -14,13 +14,13 @@ const Contacts = () => {
   }
 
   const renderedList = contacts.map((contact) => {
-    return <ContactItem key={contact.id} contact={contact} />;
+    return <ContactItem key={contact._id} contact={contact} />;
   });
 
   const filteredList =
     filtered !== null
       ? filtered.map((contact) => (
-          <ContactItem key={contact.id} contact={contact} />
+          <ContactItem key={contact._id} contact={contact} />
         ))
       : renderedList;
 

@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { v4 } from "uuid";
+import axios from "axios";
 
 import ContactContext from "./contactContext";
 import contactReducer from "./contactReducer";
@@ -11,54 +11,41 @@ import {
   UPDATE_CONTACTS,
   FILTER_CONTACTS,
   CLEAR_FILTER,
+  CONTACT_ERROR,
 } from "../types";
 
 const ContactState = (props) => {
   const initialState = {
-    contacts: [
-      {
-        id: 1,
-        name: "Aayush",
-        email: "a@gmail.com",
-        phone: "111-111-1111",
-        type: "personal",
-      },
-      {
-        id: 2,
-        name: "Gulshan",
-        email: "g@gmail.com",
-        phone: "222-222-2222",
-        type: "personal",
-      },
-      {
-        id: 3,
-        name: "Neha",
-        email: "n@gmail.com",
-        phone: "333-333-3333",
-        type: "professional",
-      },
-      {
-        id: 4,
-        name: "Ashish",
-        email: "as@gmail.com",
-        phone: "444-444-4444",
-        type: "professional",
-      },
-    ],
+    contacts: [],
     current: null,
     filtered: null,
+    error: null,
   };
 
   const [state, dispatch] = useReducer(contactReducer, initialState);
 
   //Add Contact
 
-  const addContact = (contact) => {
-    contact.id = v4();
-    dispatch({
-      type: ADD_CONTACT,
-      payload: contact,
-    });
+  const addContact = async (contact) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const res = await axios.post("/api/contacts", contact, config);
+
+      dispatch({
+        type: ADD_CONTACT,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: CONTACT_ERROR,
+        payload: err.response.msg,
+      });
+    }
   };
 
   //Delete Contact
@@ -110,6 +97,7 @@ const ContactState = (props) => {
         contacts: state.contacts,
         current: state.current,
         filtered: state.filtered,
+        error: state.error,
         addContact,
         deleteContact,
         setCurrent,
